@@ -1,0 +1,375 @@
+﻿@{
+    ViewData["Title"] = "Calculadora de Cuotas";
+}
+
+<style>
+    .calc-wrapper {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+
+    .calc-card {
+        width: 100%;
+        max-width: 520px;
+        border-radius: 16px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+        overflow: hidden;
+    }
+
+    .calc-header {
+        background: #1d4ed8;
+        color: white;
+        padding: 1.8rem 2rem;
+    }
+
+        .calc-header h4 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 0.3rem 0;
+        }
+
+        .calc-header p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #bfdbfe;
+        }
+
+    .calc-body {
+        padding: 2rem;
+        background: #fff;
+    }
+
+    .form-label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.4rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        font-size: 0.95rem;
+        padding: 0.6rem 0.85rem;
+        transition: border-color 0.15s;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #1d4ed8;
+            box-shadow: 0 0 0 3px rgba(29,78,216,0.12);
+        }
+
+    .input-group-text {
+        border-radius: 8px 0 0 8px;
+        border: 1px solid #d1d5db;
+        background: #f9fafb;
+        font-size: 0.9rem;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .input-group .form-control {
+        border-radius: 0 8px 8px 0;
+    }
+
+    .btn-calcular {
+        background: #1d4ed8;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        width: 100%;
+        transition: background 0.2s;
+    }
+
+        .btn-calcular:hover {
+            background: #1e40af;
+        }
+
+        .btn-calcular:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+        }
+
+    /* exitoso */
+    .resultado-exitoso {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+        .resultado-exitoso .label {
+            font-size: 0.8rem;
+            color: #16a34a;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+        }
+
+        .resultado-exitoso .cuota {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #15803d;
+            margin: 0;
+        }
+
+        .resultado-exitoso .detalle {
+            font-size: 0.8rem;
+            color: #4b5563;
+            margin-top: 0.5rem;
+        }
+
+    /* Error edad menor */
+    .resultado-error-menor {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+        .resultado-error-menor .icono {
+            font-size: 1.3rem;
+            line-height: 1;
+            margin-top: 2px;
+        }
+
+        .resultado-error-menor .texto-titulo {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #dc2626;
+            margin-bottom: 0.2rem;
+        }
+
+        .resultado-error-menor .texto-msg {
+            font-size: 0.85rem;
+            color: #7f1d1d;
+            margin: 0;
+        }
+
+    /* Error edad mayor  */
+    .resultado-error-mayor {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+        .resultado-error-mayor .icono {
+            font-size: 1.3rem;
+            line-height: 1;
+            margin-top: 2px;
+        }
+
+        .resultado-error-mayor .texto-titulo {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #b45309;
+            margin-bottom: 0.2rem;
+        }
+
+        .resultado-error-mayor .texto-msg {
+            font-size: 0.85rem;
+            color: #78350f;
+            margin: 0;
+        }
+
+    /* Error validacion (fecha/monto) */
+    .resultado-error-validacion {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+        .resultado-error-validacion .icono {
+            font-size: 1.3rem;
+            line-height: 1;
+            margin-top: 2px;
+        }
+
+        .resultado-error-validacion .texto-titulo {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.2rem;
+        }
+
+        .resultado-error-validacion .texto-msg {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+    .separador {
+        border: none;
+        border-top: 1px solid #f3f4f6;
+        margin: 1.5rem 0;
+    }
+</style>
+
+<div class="calc-wrapper">
+    <div class="calc-card">
+
+        <div class="calc-header">
+            <h4>Calculadora de Cuotas</h4>
+            <p>Ingresa tus datos y obtén el valor de tu cuota al instante.</p>
+        </div>
+
+        <div class="calc-body">
+
+            <div class="mb-3">
+                <label class="form-label">Fecha de nacimiento</label>
+                <input type="date" id="fechaNacimiento" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Monto del prestamo</label>
+                <div class="input-group">
+                    <span class="input-group-text">RD$</span>
+                    <input type="text" id="monto" class="form-control" placeholder="0.00" inputmode="numeric" />
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Plazo</label>
+                <select id="meses" class="form-select">
+                    <option value="">Selecciona un plazo</option>
+                    <option value="3">3 Meses</option>
+                    <option value="6">6 Meses</option>
+                    <option value="9">9 Meses</option>
+                    <option value="12">12 Meses</option>
+                </select>
+            </div>
+
+            <button id="btnCalcular" class="btn-calcular">Calcular cuota</button>
+
+            <div id="resultado" class="d-none">
+                <hr class="separador" />
+                <div id="resultadoContenido"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const MSG_MENOR = 'Lo Sentimos aun no cuenta con la edad para solicitar esta producto.';
+        const MSG_MAYOR = 'Favor pasar por una de nuestras sucursales para evaluar su caso.';
+
+        document.getElementById('btnCalcular').addEventListener('click', async () => {
+            const fechaNacimiento = document.getElementById('fechaNacimiento').value;
+            const monto           = document.getElementById('monto').value;
+            const meses           = document.getElementById('meses').value;
+
+            if (!fechaNacimiento || !monto || !meses) {
+                mostrarValidacion('Por favor completa todos los campos antes de continuar.');
+                return;
+            }
+
+            const btn = document.getElementById('btnCalcular');
+            btn.disabled    = true;
+            btn.textContent = 'Calculando...';
+
+            try {
+                const response = await fetch('/calculadora/calcular', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fechaNacimiento: fechaNacimiento,
+                        monto: parseFloat(monto),
+                        meses: parseInt(meses)
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    mostrarExitoso(data, parseInt(meses));
+                } else {
+                    const msg = data.mensaje || '';
+                    if (msg === MSG_MAYOR) {
+                        mostrarErrorMayor(msg);
+                    } else if (msg === MSG_MENOR) {
+                        mostrarErrorMenor(msg);
+                    } else {
+                        mostrarValidacion(msg);
+                    }
+                }
+
+            } catch (e) {
+                mostrarValidacion('Ocurrio un error al conectar con el servidor.');
+            } finally {
+                btn.disabled    = false;
+                btn.textContent = 'Calcular cuota';
+            }
+        });
+
+        function mostrarResultado(html) {
+            document.getElementById('resultado').classList.remove('d-none');
+            document.getElementById('resultadoContenido').innerHTML = html;
+        }
+
+        function mostrarExitoso(data, meses) {
+            const cuota = data.valorCuota.toLocaleString('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            mostrarResultado(`
+                <div class="resultado-exitoso">
+                    <div class="label">Cuota mensual estimada</div>
+                    <p class="cuota">RD$ ${cuota}</p>
+                    <div class="detalle">Pagadero en ${meses} cuotas mensuales</div>
+                </div>
+            `);
+        }
+
+        function mostrarErrorMenor(msg) {
+            mostrarResultado(`
+                <div class="resultado-error-menor">
+                    <div>
+                        <div class="texto-titulo">No cumples con la edad requerida</div>
+                        <p class="texto-msg">${msg}</p>
+                    </div>
+                </div>
+            `);
+        }
+
+        function mostrarErrorMayor(msg) {
+            mostrarResultado(`
+                <div class="resultado-error-mayor">
+                    <div>
+                        <div class="texto-titulo">Evaluacion personalizada disponible</div>
+                        <p class="texto-msg">${msg}</p>
+                    </div>
+                </div>
+            `);
+        }
+
+        function mostrarValidacion(msg) {
+            mostrarResultado(`
+                <div class="resultado-error-validacion">
+                    <div>
+                        <div class="texto-titulo">Verifica los datos ingresados</div>
+                        <p class="texto-msg">${msg}</p>
+                    </div>
+                </div>
+            `);
+        }
+    </script>
+}
